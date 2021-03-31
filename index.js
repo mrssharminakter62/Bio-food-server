@@ -19,8 +19,18 @@ app.get('/', (req, res) => {
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   client.connect(err => {
     const foodCollection = client.db("bioFood").collection("foods");
-   
-console.log('database connection success')
+   console.log('database connection success')
+
+    app.post('/addProduct', (req, res)=>{
+        const newFood = req.body;
+        console.log('adding new event: ', newFood)
+        foodCollection.insertOne(newFood)
+        .then(result => {
+            console.log('inserted count' , result)
+            res.send(result.insertedCount > 0)
+        })
+    })
+
 
   });
   
