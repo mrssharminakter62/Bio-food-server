@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express();
 const MongoClient = require('mongodb').MongoClient;
-const ObjectID = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectId;
 const bodyParser =require('body-parser');
 const cors = require('cors');
 require('dotenv').config()
@@ -20,6 +20,26 @@ app.get('/', (req, res) => {
   client.connect(err => {
     const foodCollection = client.db("bioFood").collection("foods");
    console.log('database connection success')
+
+
+    app.get('/foods', (req, res) =>{
+      foodCollection.find()
+      .toArray( (err, items)=>{
+        res.send(items)
+      })
+    })
+
+    app.get('/food/:id', (req, res)=>{
+      foodCollection.find({_id: ObjectId(req.params.id)})
+      .toArray( (err, documents)=> {
+          res.send(documents[0]);
+      })
+  })
+  
+
+
+
+
 
     app.post('/addProduct', (req, res)=>{
         const newFood = req.body;
