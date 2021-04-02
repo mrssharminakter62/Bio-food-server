@@ -21,11 +21,11 @@ app.get('/', (req, res) => {
     const foodCollection = client.db("bioFood").collection("foods");
    console.log('database connection success')
 
-
+   
     app.get('/foods', (req, res) =>{
-      foodCollection.find()
-      .toArray( (err, items)=>{
-        res.send(items)
+      foodCollection.find({email: req.query.email})
+      .toArray( (err, documents)=>{
+        res.send(documents);
       })
     })
 
@@ -36,7 +36,13 @@ app.get('/', (req, res) => {
       })
   })
   
-
+  app.delete('/delete/:id', (req, res)=>{
+      console.log(req.params.id);
+   foodCollection.deleteOne({_id:ObjectId(req.params.id)})
+    .then(result =>{
+       res.send(result.deletedCount > 0);
+    })
+ })
 
 
 
